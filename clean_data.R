@@ -72,9 +72,29 @@ trees_cleaned <- trees %>%
   ) %>% 
   mutate(
     east_west_rel = longitude - median(longitude),
-    north_south_rel = latitude - median(latitude)
+    north_south_rel = latitude - median(latitude),
+    condition = case_when(
+      condition == "very good" ~ 2,
+      condition == "good" ~ 1, 
+      condition == "fair" ~ 0,
+      condition == "poor" ~ -1,
+      condition == "critical" ~ -2,
+      TRUE ~ -99
+    ),
+    overhead_utilities = case_when(
+      overhead_utilities == "conflicting" ~ 0,
+      overhead_utilities == "no" ~ 0,
+      overhead_utilities == "yes" ~ 1,
+      TRUE ~ -99
+    ),
+    space = case_when(
+      growth_space_type == "open or restricted" ~ "open",
+      growth_space_type == "open or unrestricted" ~ "open",
+      TRUE ~ growth_space_type
+    ),
+    space = paste("growing in", space)
   ) %>% 
-  select(-longitude, -latitude) %>% 
+  select(-longitude, -latitude, -growth_space_type) %>% 
   mutate(
     growth_space_length = ifelse(growth_space_length == 99, NA, growth_space_length),
     growth_space_width = ifelse(growth_space_width == 99, NA, growth_space_width)
@@ -90,7 +110,7 @@ neighborhood_recoding <- trees_cleaned %>%
       str_detect(neighborhood, "allegheny") ~ "allegheny",
       str_detect(neighborhood, "arlington") ~ "arlington",
       str_detect(neighborhood, "homewood") ~ "homewood",
-      TRUE ~ neighborhood)
+      TRUE ~ neighborhood),
   ) %>% 
   group_by(neighborhood) %>% 
   summarise(
@@ -106,16 +126,8 @@ land_use_recoding <- trees_cleaned %>%
   select(land_use) %>% 
   count(land_use) %>% 
   arrange(n) %>% 
-  mutate(new_land_use = ifelse(n < 50, "other", land_use)) %>% 
+  mutate(land = ifelse(n < 50, "other", land_use)) %>% 
   select(-n)
-
-
-growth_space_recode <- trees_cleaned %>% 
-  select(growth_space_type) %>% 
-  count(growth_space_type) %>% 
-  mutate(new_growth_space_type = ifelse(n < 100, "other", growth_space_type)) %>% 
-  select(-n)
-
 
 numeric_data <- trees_cleaned %>% 
   purrr::keep(is.numeric)
@@ -156,13 +168,9 @@ trees_imputed <- trees_cleaned %>%
   rename(neighborhood = new_name) %>% 
   left_join(land_use_recoding, by = "land_use") %>% 
   select(-land_use) %>%
-  rename(land_use = new_land_use) %>% 
-  left_join(growth_space_recode, by = "growth_space_type") %>% 
-  select(-growth_space_type) %>%
-  rename(growth_space_type = new_growth_space_type) %>% 
   mutate(
     neighborhood = ifelse(is.na(neighborhood), "other", neighborhood),
-    land_use = ifelse(is.na(land_use), "other", land_use)
+    land = ifelse(is.na(land), "other", land)
   )
 
 
