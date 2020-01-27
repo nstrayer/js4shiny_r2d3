@@ -11,8 +11,15 @@ tree_species <- trees %>%
   #           north_south = mean(north_south_rel),
   #           east_west = mean(east_west_rel))
 
-tree_species %>% 
-  ggplot(aes(x = overall_benefits_dollar_value, y = co2_benefits_totalco2_lbs)) +
+tree_benefits <- trees %>% 
+  group_by(common_name) %>% 
+  summarise(num_obs = n(),
+            dollar_benefits = mean(overall_benefits_dollar_value),
+            co2_benefits = mean(co2_benefits_totalco2_lbs))
+
+
+tree_benefits %>% 
+  ggplot(aes(x = dollar_benefits, y = co2_benefits)) +
   scale_x_log10() +
   scale_y_log10() +
   geom_point(alpha = 0.5) 
