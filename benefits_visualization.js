@@ -3,14 +3,16 @@
 let current_selection = [];
 
 // Some constants for visual encodings 
-const margin = {left: 80, right: 100, top: 110, bottom: 25};
+const margin = {left: 50, right: 100, top: 80, bottom: 25};
 const selection_box_width = 120;
-const selection_box_height = 50;
-const submit_button_height = 40;
+const selection_box_height = 40;
+const submit_button_height = 30;
 const selected_color = "orangered";
 const normal_color = 'steelblue';
+const axis_color = "#a5a5a5";
 
-const header_y_center = margin.top/3;
+
+const header_y_center = margin.top/2;
 const header_x_start = 160;
 
 // Setup header area
@@ -59,7 +61,7 @@ const X = d3.scaleLog()
   .range([margin.left, width - margin.right]);
   
 const Y = d3.scaleLog()
-  .domain([15, d3.max(data, d => d.co2_benefits)*1.7])
+  .domain([10, d3.max(data, d => d.co2_benefits)*1.7])
   .range([height-margin.bottom, margin.top]);
   
 const Size = d3.scaleSqrt()
@@ -168,8 +170,8 @@ simulation.on("tick", () => {
 function keep_labels_in_boundaries(d){
   const min_x = 25;
   const max_x = width - min_x;
-  const min_y = 10;
-  const max_y = height - min_y;
+  const min_y = margin.top;
+  const max_y = height - 10;
   
   const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
   
@@ -297,15 +299,24 @@ function name_to_tspans(name){
 
 function draw_axes(){
   // X axis
-  svg.append("g").call(g => g
-    .attr("transform", `translate(0,${height - margin.bottom})`)
-    .call(d3.axisBottom(X).ticks(width / 80, ","))
-  );
+  svg.append("g")
+    .attr('class', 'axis')
+    .call(g => g
+      .attr("transform", `translate(0,${height - margin.bottom})`)
+      .call(d3.axisBottom(X).ticks(width / 80, ","))
+    );
   
   // Y axis
-  svg.append("g").call(g => g
-      .attr("transform", `translate(${margin.left},0)`)
-      .call(d3.axisLeft(Y))
-  );
+  svg.append("g")
+      .attr('class', 'axis')
+      .call(g => g
+        .attr("transform", `translate(${margin.left},0)`)
+        .call(d3.axisLeft(Y))
+      );
+  
+  // Set color of all legend components
+  svg.selectAll('g.axis line').attr('stroke',axis_color);
+  svg.selectAll('g.axis path').attr('stroke', axis_color);
+  svg.selectAll('g.axis text').attr('fill', axis_color);
 }
 
