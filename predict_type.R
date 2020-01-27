@@ -3,7 +3,6 @@ library(glmnet)
 
 trees <- read_csv("trees_cleaned.csv")
 
-
 # trees$common_name %>% unique()
 species_1 <-"elm: siberian"
 # species_1 <- "maple: hedge"
@@ -13,19 +12,12 @@ species_data <- trees %>%
   select(-id, -street, -scientific_name) %>% 
   filter(common_name == species_1 | common_name == species_2)  
 
-# 
-# species_data %>%
-#   mutate(
-#     space_type = paste0("growing in ", growth_space_type)
-#   ) %>% 
-#   count(space_type)
-# 
+
 species_data %>%
   purrr::keep(is.character) %>%
   pivot_longer(everything()) %>%
   group_by(name) %>%
   summarise(n_unique = length(unique(value)))
-
 
 
 # Add a suffix next to categorical variables so we know what they are later
