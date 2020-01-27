@@ -91,6 +91,7 @@ const simulation = d3.forceSimulation(trees_and_labels)
       .force("charge", 
              d3.forceManyBody()
                .strength(d => d.type == 'data' ? 0: -70)
+               .distanceMax(50)
        )
       .force("link", 
              d3.forceLink(tree_to_label)
