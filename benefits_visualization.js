@@ -3,7 +3,7 @@
 let current_selection = [];
 
 // Some constants for visual encodings 
-const margin = {left: 80, right: 100, top: 80, bottom: 25};
+const margin = {left: 80, right: 100, top: 110, bottom: 25};
 const selection_box_width = 120;
 const selection_box_height = 50;
 const submit_button_height = 40;
@@ -55,7 +55,7 @@ hide_submit_button();
 
 // Scales
 const X = d3.scaleLog()
-  .domain([4, d3.max(data, d => d.dollar_benefits)*1.5])
+  .domain([8, d3.max(data, d => d.dollar_benefits)*1.5])
   .range([margin.left, width - margin.right]);
   
 const Y = d3.scaleLog()
@@ -150,6 +150,9 @@ draw_axes();
 
 // Kickoff simulation
 simulation.on("tick", () => {
+  
+  trees_and_labels.forEach(keep_labels_in_boundaries);
+  
   labels
     .attr('transform', d => `translate(${d.x}, ${d.y})`);
    
@@ -160,6 +163,24 @@ simulation.on("tick", () => {
     .attr('y1', d => d.target.y);
 });
 
+// Helper functions
+function keep_labels_in_boundaries(d){
+  const min_x = 25;
+  const max_x = width - min_x;
+  const min_y = 10;
+  const max_y = height - min_y;
+  
+  const clamp = (x, min, max) => Math.min(Math.max(x, min), max);
+  
+  if(d.x < min_x || d.x > max_x){
+    d.x = clamp(d.x, min_x,  max_x);
+    d.vx = -d.vx;
+  }
+  if(d.y < min_y || d.y > max_y){
+    d.y = clamp(d.y, min_y,  max_y);
+    d.vy = -d.vy;
+  }
+}
 
 function update_selection(d){
   const tree_name = d.common_name || d;
