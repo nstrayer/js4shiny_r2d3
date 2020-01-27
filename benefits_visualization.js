@@ -2,13 +2,58 @@
 
 let current_selection = [];
 
-const margin = {left: 80, right: 100, top: 50, bottom: 25};
+// Some constants for visual encodings 
+const margin = {left: 80, right: 100, top: 80, bottom: 25};
 const selection_box_width = 120;
-const selection_box_height = margin.top*0.8;
+const selection_box_height = 50;
+const submit_button_height = 40;
 const selected_color = "orangered";
 const normal_color = 'steelblue';
 
+const header_y_center = margin.top/3;
+const header_x_start = 160;
 
+// Setup header area
+const selected_area = svg.append('g')
+  .attr('id', 'selected_area')
+  .attr('transform', `translate(${10}, ${header_y_center})`);
+  
+selected_area.append('text')
+  .text("Currently selected trees:")
+  .attr('text-anchor', 'end')
+  .style('alignment-baseline', 'middle')
+  .attr('font-weight', 'bold')
+  .attr('x', header_x_start);
+
+// Blocks that encode selected trees
+const selected_blocks = selected_area
+  .append('g')
+  .attr('id', 'blocks')
+  .attr('transform', `translate(${header_x_start + 10},${-header_y_center})`);
+
+const submit_button = selected_area
+  .append('g')
+  .attr('transform', `translate(${width - selection_box_width - 10},${-header_y_center})`);
+
+submit_button.append('rect')
+  .attr('width', selection_box_width)
+  .attr('height', submit_button_height)
+  .attr('rx', 15)
+  .attr('ry', 15)
+  .attr('y', -submit_button_height/2)
+  .attr('fill', 'grey');
+  
+submit_button.append('text')
+  .text('Send to model')
+  .attr('x', selection_box_width/2)
+  .style('alignment-baseline', 'middle')
+  .attr('text-anchor', 'middle')
+  .attr('fill', 'white');
+
+// Start with submit button hidden
+hide_submit_button();
+
+// Scales
 const X = d3.scaleLog()
   .domain([4, d3.max(data, d => d.dollar_benefits)*1.5])
   .range([margin.left, width - margin.right]);
@@ -22,24 +67,23 @@ const Size = d3.scaleSqrt()
   .range([4,11]);
   
   
+// Get data into proper format for the force simulation work  
 const trees = data
-  .map(d => ({id: d.common_name,
-              fx: X(d.dollar_benefits),
-              fy: Y(d.co2_benefits),
-              type: "data",
-              ...d}));
+  .map(d => Object.assign({id: d.common_name,
+                           fx: X(d.dollar_benefits),
+                           fy: Y(d.co2_benefits),
+                           type: "data"}, d));
 
 const tree_labels = data
-  .map(d => ({id: `${d.common_name}_label`, 
-              type: 'label',
-              x: X(d.dollar_benefits) + Math.random(),
-              y: Y(d.co2_benefits) + Math.random(),
-              label: name_to_tspans(d.common_name)}));
+  .map(d => Object.assign({id: `${d.common_name}_label`, 
+                           type: 'label',
+                           x: X(d.dollar_benefits) + Math.random(),
+                           y: Y(d.co2_benefits) + Math.random(),
+                           label: name_to_tspans(d.common_name)}, d));
 
 const trees_and_labels = [...trees,...tree_labels];
 const tree_to_label = trees
-  .map(d => ({source: d.common_name, 
-              target: `${d.common_name}_label`}));
+  .map(d => ({source: d.common_name, target: `${d.common_name}_label`}));
 
 
 // Setup the simulation
@@ -58,43 +102,8 @@ const simulation = d3.forceSimulation(trees_and_labels)
                .radius(d => d.type == 'data' ? Size(d.num_obs) + 2: 30)
        );
   
-  
-// Setup header area
-const selected_area = svg.append('g')
-  .attr('id', 'selected_area')
-  .attr('transform', `translate(${10}, ${margin.top/2})`);
-  
-selected_area.append('text')
-  .text("Currently selected trees:")
-  .attr('text-anchor', 'end')
-  .attr('transform', `translate(${150},${0})`);
 
-const selected_blocks = selected_area
-  .append('g')
-  .attr('id', 'blocks')
-  .attr('transform', `translate(${160},${-selection_box_height/2})`);
-
-
-
-const submit_button = selected_area
-  .append('g')
-  .attr('transform', `translate(${width - selection_box_width - 5},${-selection_box_height*2.5})`);
-
-submit_button.append('rect')
-  .attr('width', selection_box_width)
-  .attr('height', selection_box_height)
-  .attr('fill', 'grey');
-  
-submit_button.append('text')
-  .text('Send to model')
-  .attr('y', selection_box_height/2)
-  .attr('x', selection_box_width/2)
-  .style('alignment-baseline', 'middle')
-  .attr('text-anchor', 'middle')
-  .attr('fill', 'white');
-
-hide_submit_button();
-
+// Append all the data-related objects to the plot (unpositioned)
 const links = svg.selectAll('line.label')
   .data(tree_to_label)
   .enter().append('line')
@@ -102,7 +111,7 @@ const links = svg.selectAll('line.label')
   .attr('stroke-width', 1)
   .attr('stroke', 'grey');
   
-  
+// The actual points
 const tree_circles = svg.selectAll("circle.tree")  
   .data(trees_and_labels.filter(d => d.type == "data"))
   .enter().append('circle')
@@ -112,11 +121,48 @@ const tree_circles = svg.selectAll("circle.tree")
   .attr("r", d => Size(d.num_obs))
   .attr("fill", normal_color)
   .attr("fill-opacity", 0.75)
-  .on("click",  update_selection);
+  .on("click",  update_selection)
+  .style('cursor', 'pointer');
+
+const labels = svg.selectAll("g.label") 
+  .data(trees_and_labels.filter(d => d.type == "label"))
+  .enter().append('g')
+  .attr('class', 'label')
+  .on('click', update_selection);
+
+// Add a small semi-opaque rectangle behind to make text easier to read
+labels.append('rect')
+  .attr('y', -10)
+  .attr('x', -15)
+  .attr("width", 30)
+  .attr('height', 20)
+  .attr('fill', 'white')
+  .attr('fill-opacity', 0.8);
+
+// Add actual name of tree  
+const label_text = labels.append('text')
+  .attr('text-anchor', 'middle')  
+  .attr('font-size', 12)
+  .html(d => d.label)
+  .style('cursor', 'pointer');
+ 
+draw_axes();
+
+// Kickoff simulation
+simulation.on("tick", () => {
+  labels
+    .attr('transform', d => `translate(${d.x}, ${d.y})`);
+   
+  links
+    .attr('x2', d => d.source.x)
+    .attr('x1', d => d.target.x)
+    .attr('y2', d => d.source.y)
+    .attr('y1', d => d.target.y);
+});
 
 
 function update_selection(d){
-  const tree_name = d.common_name;
+  const tree_name = d.common_name || d;
   
   // First check if selection is currently selected 
   const currently_selected = current_selection.includes(tree_name);
@@ -141,11 +187,15 @@ function update_selection(d){
     hide_submit_button();
   }
   
+  const in_selection = d => current_selection.includes(d.common_name);
+  
   // Redraw selection portion of data
   tree_circles
-    .attr('fill', d => current_selection.includes(d.common_name) 
-                       ? selected_color 
-                       : normal_color );
+    .attr('fill', d => in_selection(d) ? selected_color: normal_color);
+                       
+  label_text
+    .attr('font-weight', d =>  in_selection(d) ? "bold" : "normal")
+    .attr('fill', d => in_selection(d)? selected_color : "black");
                        
   // Fill in selected codes boxes
   update_selection_boxes(current_selection);
@@ -161,18 +211,18 @@ function update_selection_boxes(selections){
   const new_trees = all_trees
     .enter().append('g')
     .attr('class', 'selection')
-    .attr('transform', (_,i) => `translate(${width + selection_box_width}, 0)`);
+    .attr('transform', (_,i) => `translate(${width + selection_box_width}, ${header_y_center})`);
     
   new_trees.append('rect')
     .attr('fill', selected_color)
     .attr("fill-opacity", 0.75)
     .attr('width', selection_box_width)
     .attr('height', selection_box_height)
+    .attr('y', -selection_box_height/2)
     .attr('rx', 5)
     .attr('ry', 5);
     
   new_trees.append('text')
-    .attr('y', selection_box_height/2)
     .attr('x', selection_box_width/2)
     .style('alignment-baseline', 'middle')
     .attr('text-anchor', 'middle')
@@ -197,13 +247,15 @@ function update_selection_boxes(selections){
     .merge(all_trees);
   
   updating_trees.transition()
-    .attr('transform', (_,i) => `translate(${i * (selection_box_width + 10)}, 0)`);
+    .attr('transform', (_,i) => `translate(${i * (selection_box_width + 10)}, ${header_y_center})`);
+    
+  updating_trees.on('click',  update_selection);
 }
 
 function show_submit_button(){
   submit_button
     .transition()
-    .attr('transform', `translate(${width - selection_box_width - 5},${-selection_box_height/2})`);
+    .attr('transform', `translate(${width - selection_box_width - 10},${0})`);
 }
 
 function hide_submit_button(){
@@ -211,50 +263,6 @@ function hide_submit_button(){
     .transition()
     .attr('transform', `translate(${width - selection_box_width - 5},${-selection_box_height*2.5})`);
 }
-  
-const labels = svg.selectAll("g.label") 
-  .data(trees_and_labels.filter(d => d.type == "label"))
-  .enter().append('g')
-  .attr('class', 'label');
-  
-labels.append('rect')
-  .attr('y', -10)
-  .attr('x', -15)
-  .attr("width", 30)
-  .attr('height', 20)
-  .attr('fill', 'white')
-  .attr('fill-opacity', 0.8);
-  
-const label_text = labels.append('text')
-  .attr('text-anchor', 'middle')  
-  .attr('font-size', 12)
-  .html(d => d.label);
- 
-// Kickoff simulation
-simulation.on("tick", () => {
-    
-  labels
-    .attr('transform', d => `translate(${d.x}, ${d.y})`);
-   
-  links
-    .attr('x2', d => d.source.x)
-    .attr('x1', d => d.target.x)
-    .attr('y2', d => d.source.y)
-    .attr('y1', d => d.target.y);
-});
-
-// Draw axes
-svg.append("g").call(g => g
-  .attr("transform", `translate(0,${height - margin.bottom})`)
-  .call(d3.axisBottom(X).ticks(width / 80, ","))
-);
-
-svg.append("g").call(g => g
-    .attr("transform", `translate(${margin.left},0)`)
-    .call(d3.axisLeft(Y))
-);
-
-
 
 function name_to_tspans(name){
   return name
@@ -263,5 +271,19 @@ function name_to_tspans(name){
       (full, line, i) => full + `<tspan x="0" ${i != 0 ? `dy="10"`: ""}>${line}</tspan>`,
       ''
       );
+}
+
+function draw_axes(){
+  // X axis
+  svg.append("g").call(g => g
+    .attr("transform", `translate(0,${height - margin.bottom})`)
+    .call(d3.axisBottom(X).ticks(width / 80, ","))
+  );
+  
+  // Y axis
+  svg.append("g").call(g => g
+      .attr("transform", `translate(${margin.left},0)`)
+      .call(d3.axisLeft(Y))
+  );
 }
 
