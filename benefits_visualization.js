@@ -35,7 +35,8 @@ const selected_blocks = selected_area
 
 const submit_button = selected_area
   .append('g')
-  .attr('transform', `translate(${width - selection_box_width - 10},${-header_y_center})`);
+  .attr('transform', `translate(${width - selection_box_width - 10},${-header_y_center})`)
+  .on('click', submit_selection);
 
 submit_button.append('rect')
   .attr('width', selection_box_width)
@@ -51,6 +52,7 @@ submit_button.append('text')
   .style('alignment-baseline', 'middle')
   .attr('text-anchor', 'middle')
   .attr('fill', 'white');
+
 
 // Start with submit button hidden
 hide_submit_button();
@@ -165,6 +167,10 @@ simulation.on("tick", () => {
     .attr('y2', d => d.source.y)
     .attr('y1', d => d.target.y);
 });
+
+function submit_selection(){
+  console.log(`Selected ${current_selection[0]} and ${current_selection[1]}`);
+}
 
 // Helper functions
 function keep_labels_in_boundaries(d){
