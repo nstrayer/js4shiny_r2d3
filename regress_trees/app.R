@@ -20,27 +20,30 @@ tree_species <- trees %>%
 ui <- fluidPage(
     # Application title
     titlePanel("Which Tree Is That?"),
-    selectInput('species_1', 
-                label =  "Species 1", 
-                choices = tree_species$common_name, 
-                selected = sample(tree_species$common_name, 1)),
-    selectInput('species_2', 
-                label =  "Species 2", 
-                choices = tree_species$common_name,
-                selected = sample(tree_species$common_name, 1)),
+    d3Output("tree_viz"),
+    # selectInput('species_1', 
+    #             label =  "Species 1", 
+    #             choices = tree_species$common_name, 
+    #             selected = sample(tree_species$common_name, 1)),
+    # selectInput('species_2', 
+    #             label =  "Species 2", 
+    #             choices = tree_species$common_name,
+    #             selected = sample(tree_species$common_name, 1)),
     plotOutput("regressionOutput")
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
     
-    selected_species <- reactive({
-        c(input$species_1, input$species_2)
+
+    output$tree_viz <- renderD3({
+        r2d3(data = tree_species, script = "../benefits_visualization.js")
     })
     
     output$regressionOutput <- renderPlot({
-        species_1 <- selected_species()[1]
-        species_2 <- selected_species()[2]
+        req(input$selected_species)
+        species_1 <- input$selected_species[1]
+        species_2 <- input$selected_species[2]
         
         if(species_1 == species_2){
             stop("Need two different selected species")
