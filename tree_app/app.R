@@ -37,8 +37,14 @@ server <- function(input, output) {
   })
   
   output$regressionOutput <- renderPlot({
-    species_1 <- input$species_1
-    species_2 <- input$species_2
+    
+    # Listen for selected species from d3 viz
+    req(input$selected_species)
+    species_1 <- input$selected_species[1]
+    species_2 <- input$selected_species[2]
+    
+    # species_1 <- input$species_1
+    # species_2 <- input$species_2
     
     if(species_1 == species_2){
       stop("Need two different selected species")

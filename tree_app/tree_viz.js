@@ -172,14 +172,14 @@ simulation.on("tick", () => {
 function submit_selection(){
   console.log(`Selected ${current_selection[0]} and ${current_selection[1]}`);
 
-  // if(Shiny){
-  //   console.log("Sending to shiny");
-  //   Shiny.setInputValue(
-  //     "selected_species", 
-  //     current_selection,
-  //     {priority: "event"}
-  //   );
-  // }
+  if(Shiny){
+    console.log("Sending to shiny");
+    Shiny.setInputValue(
+      "selected_species", 
+      current_selection,
+      {priority: "event"}
+    );
+  }
 }
 
 // Helper functions
