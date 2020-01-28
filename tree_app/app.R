@@ -15,6 +15,7 @@ ui <- fluidPage(
   # Application title
   titlePanel("Which Tree Is That?"),
   hr(),
+  d3Output("tree_viz"),     # The output of d3 viz
   selectInput('species_1',
               label =  "Species 1",
               choices = tree_benefits$common_name,
@@ -29,6 +30,11 @@ ui <- fluidPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
+  
+  # Runs r2d3 and sends to UI
+  output$tree_viz <- renderD3({
+    r2d3(data = tree_benefits, script = "tree_viz.js")
+  })
   
   output$regressionOutput <- renderPlot({
     species_1 <- input$species_1
