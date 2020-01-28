@@ -8,6 +8,11 @@
 - `tree_app/`: Final form of Shiny app. 
 - `slides/`: RMarkdown slides for R2D3 presentation
 
+
+# How to download
+
+Either clone this repo or download [the zip file](https://github.com/nstrayer/js4shiny_r2d3/archive/master.zip) of all code. 
+
 # Project
 
 ## Lost?
