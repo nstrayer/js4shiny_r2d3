@@ -17,6 +17,9 @@ tree_benefits <- trees %>%
             dollar_benefits = mean(overall_benefits_dollar_value),
             co2_benefits = mean(co2_benefits_totalco2_lbs))
 
+write_csv(tree_benefits, 'data/tree_benefits.csv')
+
+
 
 tree_benefits %>% 
   ggplot(aes(x = dollar_benefits, y = co2_benefits)) +

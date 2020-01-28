@@ -2,12 +2,13 @@
 
 library(tidyverse)
 library(glmnet)
+library(here)
 
 # Data dictionary with column types
 # convert to R friendly type names
 
 
-tree_columns <- read_csv('data/trees_columns.csv') %>% 
+tree_columns <- read_csv(here('data/trees_columns.csv')) %>% 
   mutate(
     type = case_when(
       id == "stormwater_benefits_dollar_value" ~ "c",  # For some reason these are wrong in the provided dictionary
@@ -40,7 +41,7 @@ bad_species_names <- c(
 )
 
 # Read in main dataset and filter to desired columns
-trees <- read_csv('data/pittsburgh_trees_01042020.csv',
+trees <- read_csv(here('data/pittsburgh_trees_01042020.csv'),
                   skip = 1,
                   col_names = tree_columns$id, 
                   col_types = paste(tree_columns$type, collapse = "")) %>% 
@@ -204,8 +205,17 @@ purrr::keep(trees_imputed, is.numeric) %>%
 
 
 
+trees_imputed %>% write_csv(here('data/trees_cleaned.csv'))
 
-trees_imputed %>% write_csv("trees_cleaned.csv")
+# Now get single species levels for visualizations
+tree_benefits <- trees_imputed %>% 
+  group_by(common_name) %>% 
+  summarise(num_obs = n(),
+            dollar_benefits = mean(overall_benefits_dollar_value),
+            co2_benefits = mean(co2_benefits_totalco2_lbs))
+
+write_csv(tree_benefits, here('data/tree_benefits.csv'))
+
 
 
 
