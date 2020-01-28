@@ -1,7 +1,16 @@
 ## JS4Shiny R2D3 Section
 
+## Repo Layout
+
+- `data/`: Various CSVs with raw and cleaned data.
+- `data_manipulation_scripts/`: R Scripts to read and clean data for use in app. 
+- `step_*/`: Full shiny app as it should exist at the end of each step.
+- `tree_app/`: Final form of Shiny app. 
+- `slides/`: RMarkdown slides for R2D3 presentation
 
 ## Project Tasks
+
+__Lost?__ You can skip a sticky step by simply going each steps folder to find the code as it should be at the end of the step. Also, don't hesitate to ask questions! 
 
 1. Run shiny app with regression model to see how it works
     1. Open `step_1/app.R`
