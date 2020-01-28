@@ -1,6 +1,6 @@
 library(tidyverse)
 
-trees <- read_csv("trees_cleaned.csv")
+trees <- read_csv("data/trees_cleaned.csv")
 
 # scatterplot of median height and width by species
 tree_species <- trees %>% 

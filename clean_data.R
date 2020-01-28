@@ -7,7 +7,7 @@ library(glmnet)
 # convert to R friendly type names
 
 
-tree_columns <- read_csv('trees_columns.csv') %>% 
+tree_columns <- read_csv('data/trees_columns.csv') %>% 
   mutate(
     type = case_when(
       id == "stormwater_benefits_dollar_value" ~ "c",  # For some reason these are wrong in the provided dictionary
@@ -40,7 +40,7 @@ bad_species_names <- c(
 )
 
 # Read in main dataset and filter to desired columns
-trees <- read_csv('pittsburgh_trees_01042020.csv',
+trees <- read_csv('data/pittsburgh_trees_01042020.csv',
                   skip = 1,
                   col_names = tree_columns$id, 
                   col_types = paste(tree_columns$type, collapse = "")) %>% 

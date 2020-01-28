@@ -1,23 +1,21 @@
 library(tidyverse)
 library(glmnet)
 
-trees <- read_csv("trees_cleaned.csv")
+trees <- read_csv("trees_cleaned.csv") %>% select(-id, -street, -scientific_name)
 
 # trees$common_name %>% unique()
 species_1 <-"elm: siberian"
-# species_1 <- "maple: hedge"
 species_2 <- "redbud: eastern"
+# species_1 <- "maple: hedge"
 
-species_data <- trees %>% 
-  select(-id, -street, -scientific_name) %>% 
-  filter(common_name == species_1 | common_name == species_2)  
+species_data <- trees %>% filter(common_name == species_1 | common_name == species_2)  
 
-
-species_data %>%
-  purrr::keep(is.character) %>%
-  pivot_longer(everything()) %>%
-  group_by(name) %>%
-  summarise(n_unique = length(unique(value)))
+# 
+# species_data %>%
+#   purrr::keep(is.character) %>%
+#   pivot_longer(everything()) %>%
+#   group_by(name) %>%
+#   summarise(n_unique = length(unique(value)))
 
 
 # Add a suffix next to categorical variables so we know what they are later
@@ -26,7 +24,6 @@ predictors_df <- species_data %>%
   rename_if(is.character, function(name) paste0(name,"__")) %>% 
   rename_if(is.numeric, function(name) paste0("numeric__",name)) 
   
-
 
 predictors <-  model.matrix( ~ ., predictors_df)
 is_species_1 <- species_data$common_name == species_1

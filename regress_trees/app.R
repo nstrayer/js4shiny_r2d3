@@ -4,7 +4,7 @@ library(glmnet)
 library(r2d3)
 
 # Read in data 
-trees <- read_csv("../trees_cleaned.csv") %>% 
+trees <- read_csv("../data/trees_cleaned.csv") %>% 
     select(-id, -street, -scientific_name)
 
 # Get summary level info for plotting
@@ -21,6 +21,7 @@ ui <- fluidPage(
     # Application title
     titlePanel("Which Tree Is That?"),
     d3Output("tree_viz"),
+    hr(),
     # selectInput('species_1', 
     #             label =  "Species 1", 
     #             choices = tree_species$common_name, 
@@ -29,13 +30,13 @@ ui <- fluidPage(
     #             label =  "Species 2", 
     #             choices = tree_species$common_name,
     #             selected = sample(tree_species$common_name, 1)),
+    h2("Regression Results"),
     plotOutput("regressionOutput")
 )
 
 # Define server logic required to draw a histogram
 server <- function(input, output) {
     
-
     output$tree_viz <- renderD3({
         r2d3(data = tree_species, script = "../benefits_visualization.js")
     })
