@@ -174,7 +174,7 @@ Now just save to update preview...
 ## UI
 
 Inserts R2D3 chart into the UI to be targeted with id `"d3"`.
-```{eval = FALSE}
+```{r, eval = FALSE}
 r2d3::d3Output("d3")
 ```
 ]
