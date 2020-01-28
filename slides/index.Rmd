@@ -11,7 +11,7 @@ output:
     nature:
       highlightStyle: github
       highlightLines: true
-      slideNumberFormat: "nickstrayer.me/jsforshiny_r2d3/slides/#%current% of %total%"
+      slideNumberFormat: "nickstrayer.me/js4shiny_r2d3/slides/#%current% of %total%"
 ---
 class: middle, center
 
@@ -21,11 +21,11 @@ options(htmltools.dir.version = FALSE)
 
 
 
-# Repo: github.com/nstrayer/jsforshiny_r2d3
+# Repo: github.com/nstrayer/js4shiny_r2d3
 
 --- 
 
-# Slides: nickstrayer.me/jsforshiny_r2d3/slides/
+# Slides: nickstrayer.me/js4shiny_r2d3/slides/
 
 ---
 
@@ -33,7 +33,7 @@ options(htmltools.dir.version = FALSE)
 
 
 .pull-left[
-  ## [Phewas Multimorbidity Explorer](https://prod.tbilab.org/me_w_test_data/)
+  ## [Multimorbidity Explorer](https://prod.tbilab.org/me_w_test_data/)
   
   .shadowed[![](figs/me_screenshot.png)]
 ]
@@ -55,7 +55,10 @@ options(htmltools.dir.version = FALSE)
 .shadowed[
 ![](figs/d3_site.png)
 ]
+
 ---
+class: middle
+
 # What is R2D3?
 
 R-Package that lets you write D3 (or any JS) code and display in an Rmd, standalone HTML file, or... __Shiny__.
