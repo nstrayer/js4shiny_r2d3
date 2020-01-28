@@ -27,7 +27,7 @@ There are a few things you can do to get unstuck
     
    
 ### [Step 2: Find visualization on Observable and paste into r2d3 script in RStudio](https://github.com/nstrayer/jsforshiny_project/commit/bbd6808fe32476a2c779cd8a500b0d93b9d996dc)
-1. Go to [observable notebook with species visualization](https://observablehq.com/d/fa83c0bca9b47371)
+1. Go to [observable notebook with species visualization](https://observablehq.com/@nstrayer/js4shiny-workshop-demo)
 2. Copy all the code inside comments `// Start copying here` and `// End copying here`.
 3. Create a new "D3 Script" in RStudio
 4. Paste all code from Observable into new file
