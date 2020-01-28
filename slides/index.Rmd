@@ -1,15 +1,15 @@
 ---
-title: "R2D3"
+title: "R2D3 For Shiny Users"
 author: "Nick Strayer"
 institute: "Vanderbilt"
 date: "`r Sys.Date()`"
 output:
-  xaringan::moon_reader:
+ xaringan::moon_reader:
+    css: ["default", "styles.css"]
     lib_dir: libs
     nature:
       highlightStyle: github
       highlightLines: true
-      countIncrementalSlides: false
 ---
 
 
@@ -31,11 +31,8 @@ options(htmltools.dir.version = FALSE)
 }
 </style>
 
-# Layout
 
 
-
----
 # Motivation
 
 
@@ -150,19 +147,27 @@ Now just save to update preview...
 ]
 
 ---
+
 # How R2D3 works
+
+![](figs/how_r2d3_works.png)
+
 
 
 ---
+
 # Limitations of R2D3
 
 - You have to supply almost all the logic
 - Data is in text
+  - Can bog down browser with large amounts of data
+  - It's all available for the world
 - Isolated from rest of HTML (this is actually good...)
-- Can bog down browser with large amounts of data
 
+.shadowed[![](figs/data_in_html.png)]
 
 ---
+
 # Putting into Shiny
 
 .pull-left[

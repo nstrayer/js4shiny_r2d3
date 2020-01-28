@@ -1,21 +1,21 @@
 <!DOCTYPE html>
 <html lang="" xml:lang="">
   <head>
-    <title>R2D3</title>
+    <title>R2D3 For Shiny Users</title>
     <meta charset="utf-8" />
     <meta name="author" content="Nick Strayer" />
-    <meta name="date" content="2020-01-27" />
+    <meta name="date" content="2020-01-28" />
     <link href="libs/remark-css/default.css" rel="stylesheet" />
-    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" type="text/css" />
   </head>
   <body>
     <textarea id="source">
 class: center, middle, inverse, title-slide
 
-# R2D3
+# R2D3 For Shiny Users
 ### Nick Strayer
 ### Vanderbilt
-### 2020-01-27
+### 2020-01-28
 
 ---
 
@@ -37,12 +37,9 @@ class: center, middle, inverse, title-slide
 }
 &lt;/style&gt;
 
-# Layout
 
 
-
----
-# Motivating interactive visualizations
+# Motivation
 
 
 .pull-left[
@@ -156,19 +153,27 @@ Now just save to update preview...
 ]
 
 ---
+
 # How R2D3 works
+
+![](figs/how_r2d3_works.png)
+
 
 
 ---
+
 # Limitations of R2D3
 
 - You have to supply almost all the logic
 - Data is in text
+  - Can bog down browser with large amounts of data
+  - It's all available for the world
 - Isolated from rest of HTML (this is actually good...)
-- Can bog down browser with large amounts of data
 
+.shadowed[![](figs/data_in_html.png)]
 
 ---
+
 # Putting into Shiny
 
 .pull-left[
@@ -217,8 +222,7 @@ input$bar_clicked
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
 <script>var slideshow = remark.create({
 "highlightStyle": "github",
-"highlightLines": true,
-"countIncrementalSlides": false
+"highlightLines": true
 });
 if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
   window.dispatchEvent(new Event('resize'));

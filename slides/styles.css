@@ -1,0 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Montserrat|Playfair+Display');
+
+
+body {
+  font-family: 'Montserrat', sans-serif;
+}
+
+h1, h2, h3 {
+  font-family: 'Playfair Display', serif;
+}
+
+
+.remark-slide-content h1 {
+    font-size: 40px;
+}
+
+.remark-slide-content h2 {
+    font-size: 35px;
+}
+
+.remark-slide-content h3 {
+    font-size: 30px;
+}
