@@ -33,7 +33,7 @@ options(htmltools.dir.version = FALSE)
 
 
 .pull-left[
-  ## [Multimorbidity Explorer](https://prod.tbilab.org/me_w_test_data/)
+  ## [Multimorbidity Explorer](https://prod.tbilab.org/phewas_me/)
   
   .shadowed[![](figs/me_screenshot.png)]
 ]
