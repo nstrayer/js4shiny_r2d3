@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="" xml:lang="">
+  <head>
+    <title>R2D3</title>
+    <meta charset="utf-8" />
+    <meta name="author" content="Nick Strayer" />
+    <meta name="date" content="2020-01-27" />
+    <link href="libs/remark-css/default.css" rel="stylesheet" />
+    <link href="libs/remark-css/default-fonts.css" rel="stylesheet" />
+  </head>
+  <body>
+    <textarea id="source">
+class: center, middle, inverse, title-slide
+
+# R2D3
+### Nick Strayer
+### Vanderbilt
+### 2020-01-27
+
+---
+
+
+
+
+
+
+&lt;style&gt;
+.small_text {
+  font-size: 0.95rem;
+}
+.shadowed {
+  box-shadow: 3px 3px 5px grey;
+}
+
+.iconed {
+  font-size: 7.5rem;
+}
+&lt;/style&gt;
+
+# Layout
+
+
+
+---
+# Motivating interactive visualizations
+
+
+.pull-left[
+  ## [Phewas Multimorbidity Explorer](https://prod.tbilab.org/me_w_test_data/)
+  
+  .shadowed[![](figs/me_screenshot.png)]
+]
+
+.pull-right[
+  ## [The traveling metallurgist](https://livefreeordichotomize.com/2017/09/25/the-traveling-metallurgist/)
+  
+  .shadowed[![](figs/mcmc_screenshot.png)]
+]
+
+
+---
+# What is D3?
+
+&gt; __D__ata-__D__riven __D__ocuments
+
+&gt; D3.js is a JavaScript library for manipulating documents based on data. D3 helps you bring data to life using HTML, SVG, and CSS. D3’s emphasis on web standards gives you the full capabilities of modern browsers without tying yourself to a proprietary framework, combining powerful visualization components and a data-driven approach to DOM manipulation.
+
+.shadowed[
+![](figs/d3_site.png)
+]
+---
+# What is R2D3?
+
+R-Package that lets you write D3 (or any JS) code and display in an Rmd, standalone HTML file, or... __Shiny__.
+
+.shadowed[
+![](figs/r2d3_site.png)
+]
+
+---
+# How R2D3 makes things easier
+
+.pull-left[
+## For R 
+  Custom visualizations from R focusing only on the visualization javascript.
+  
+  .center[.iconed[🧐]]
+]
+
+.pull-right[
+## For JS
+  Getting data is super easy. It just magically appears in your JS. 
+  
+  .center[.iconed[🚚]]
+  
+]
+
+
+---
+# When should you reach for R2D3?
+
+.pull-left[
+- You have decided you _need_ an interactive visualization
+
+- The functionality is not available in more 'features-included' libraries
+  - Plotly, VegaWidget,...
+
+- You have the time...
+]
+.pull-right[
+&lt;img src = "https://miro.medium.com/max/2296/1*iPQjn0t4CV2BuNuQvBZ0_Q.png" height = 150&gt;
+&lt;img src = "https://plotly-r.com/crc-cover.png" height = 270&gt;
+]
+
+
+
+---
+# Finding examples to use as starting point
+
+.center[
+ _Embrace the ctrl-C `\(\to\)` ctrl-V_
+]
+
+.pull-left[
+.center[
+  ## [Observable](https://observablehq.com/)
+]
+
+- The RMD/Jupyter of JS
+- Not _quite_ real JS
+.shadowed[
+![](figs/observable_screenshot.png)
+]
+]
+.pull-right[
+.center[
+  ## [Bl.ocks](https://bl.ocks.org/)
+]
+- Full scripts for visualizations
+- "Old" version of Observable
+.shadowed[
+![](figs/blocks_screenshot.png)
+]
+]
+
+---
+# Writing your visualization
+.center[
+File `\(\to\)` New File `\(\to\)` D3 Script
+
+.shadowed[
+![](figs/r2d3_editing.png)
+]
+
+Now just save to update preview...
+]
+
+---
+# How R2D3 works
+
+
+---
+# Limitations of R2D3
+
+- You have to supply almost all the logic
+- Data is in text
+- Isolated from rest of HTML (this is actually good...)
+- Can bog down browser with large amounts of data
+
+
+---
+# Putting into Shiny
+
+.pull-left[
+
+## UI
+
+Inserts R2D3 chart into the UI to be targeted with id `"d3"`.
+
+```eval
+r2d3::d3Output("d3")
+```
+]
+
+.pull-right[
+## Server
+Send R2D3 visualization to output element `"d3"`.
+
+```r
+output$d3 &lt;- 
+  r2d3::renderD3({
+    r2d3::r2d3(...)
+  })
+```
+
+]
+
+
+---
+# Wiring up communications to shiny from R2D3 viz.
+
+Wire-up your JS to send a message to Shiny... 
+.center[
+&lt;img src = "https://rstudio.github.io/r2d3/articles/images/onclick.PNG" height = 200&gt;
+]
+.pull-right[.small_text[_Example from [R2D3 shiny article](https://rstudio.github.io/r2d3/articles/shiny.html)_]]
+
+
+Now just access in your shiny app with 
+
+
+```r
+input$bar_clicked
+```
+    </textarea>
+<style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
+<script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
+<script>var slideshow = remark.create({
+"highlightStyle": "github",
+"highlightLines": true,
+"countIncrementalSlides": false
+});
+if (window.HTMLWidgets) slideshow.on('afterShowSlide', function (slide) {
+  window.dispatchEvent(new Event('resize'));
+});
+(function(d) {
+  var s = d.createElement("style"), r = d.querySelector(".remark-slide-scaler");
+  if (!r) return;
+  s.type = "text/css"; s.innerHTML = "@page {size: " + r.style.width + " " + r.style.height +"; }";
+  d.head.appendChild(s);
+})(document);
+
+(function(d) {
+  var el = d.getElementsByClassName("remark-slides-area");
+  if (!el) return;
+  var slide, slides = slideshow.getSlides(), els = el[0].children;
+  for (var i = 1; i < slides.length; i++) {
+    slide = slides[i];
+    if (slide.properties.continued === "true" || slide.properties.count === "false") {
+      els[i - 1].className += ' has-continuation';
+    }
+  }
+  var s = d.createElement("style");
+  s.type = "text/css"; s.innerHTML = "@media print { .has-continuation { display: none; } }";
+  d.head.appendChild(s);
+})(document);
+// delete the temporary CSS (for displaying all slides initially) when the user
+// starts to view slides
+(function() {
+  var deleted = false;
+  slideshow.on('beforeShowSlide', function(slide) {
+    if (deleted) return;
+    var sheets = document.styleSheets, node;
+    for (var i = 0; i < sheets.length; i++) {
+      node = sheets[i].ownerNode;
+      if (node.dataset["target"] !== "print-only") continue;
+      node.parentNode.removeChild(node);
+    }
+    deleted = true;
+  });
+})();
+// adds .remark-code-has-line-highlighted class to <pre> parent elements
+// of code chunks containing highlighted lines with class .remark-code-line-highlighted
+(function(d) {
+  const hlines = d.querySelectorAll('.remark-code-line-highlighted');
+  const preParents = [];
+  const findPreParent = function(line, p = 0) {
+    if (p > 1) return null; // traverse up no further than grandparent
+    const el = line.parentElement;
+    return el.tagName === "PRE" ? el : findPreParent(el, ++p);
+  };
+
+  for (let line of hlines) {
+    let pre = findPreParent(line);
+    if (pre && !preParents.includes(pre)) preParents.push(pre);
+  }
+  preParents.forEach(p => p.classList.add("remark-code-has-line-highlighted"));
+})(document);</script>
+
+<script>
+(function() {
+  var links = document.getElementsByTagName('a');
+  for (var i = 0; i < links.length; i++) {
+    if (/^(https?:)?\/\//.test(links[i].getAttribute('href'))) {
+      links[i].target = '_blank';
+    }
+  }
+})();
+</script>
+
+<script>
+slideshow._releaseMath = function(el) {
+  var i, text, code, codes = el.getElementsByTagName('code');
+  for (i = 0; i < codes.length;) {
+    code = codes[i];
+    if (code.parentNode.tagName !== 'PRE' && code.childElementCount === 0) {
+      text = code.textContent;
+      if (/^\\\((.|\s)+\\\)$/.test(text) || /^\\\[(.|\s)+\\\]$/.test(text) ||
+          /^\$\$(.|\s)+\$\$$/.test(text) ||
+          /^\\begin\{([^}]+)\}(.|\s)+\\end\{[^}]+\}$/.test(text)) {
+        code.outerHTML = code.innerHTML;  // remove <code></code>
+        continue;
+      }
+    }
+    i++;
+  }
+};
+slideshow._releaseMath(document);
+</script>
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+(function () {
+  var script = document.createElement('script');
+  script.type = 'text/javascript';
+  script.src  = 'https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-MML-AM_CHTML';
+  if (location.protocol !== 'file:' && /^https?:/.test(script.src))
+    script.src  = script.src.replace(/^https?:/, '');
+  document.getElementsByTagName('head')[0].appendChild(script);
+})();
+</script>
+  </body>
+</html>
