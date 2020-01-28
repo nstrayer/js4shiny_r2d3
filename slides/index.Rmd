@@ -11,11 +11,13 @@ output:
       highlightStyle: github
       highlightLines: true
 ---
-
+class: middle, center
 
 ```{r setup, include=FALSE}
 options(htmltools.dir.version = FALSE)
 ```
+
+
 
 
 <style>
@@ -31,7 +33,13 @@ options(htmltools.dir.version = FALSE)
 }
 </style>
 
+# Repo: github.com/nstrayer/jsforshiny_r2d3
 
+--- 
+
+# Slides: nickstrayer.me/jsforshiny_r2d3/slides/
+
+---
 
 # Motivation
 
