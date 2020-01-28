@@ -21,3 +21,14 @@ h1, h2, h3 {
 .remark-slide-content h3 {
     font-size: 30px;
 }
+
+.small_text {
+  font-size: 0.95rem;
+}
+.shadowed {
+  box-shadow: 3px 3px 5px grey;
+}
+
+.iconed {
+  font-size: 7.5rem;
+}

@@ -1,7 +1,8 @@
 ---
-title: "R2D3 For Shiny Users"
+title: "How I learned to stop templating and love R2D3"
+subtitle: "RStudio::conf 2020 JS4Shiny Workshop"
 author: "Nick Strayer"
-institute: "Vanderbilt"
+institute: "Vanderbilt University"
 date: "`r Sys.Date()`"
 output:
  xaringan::moon_reader:
@@ -19,20 +20,6 @@ options(htmltools.dir.version = FALSE)
 ```
 
 
-
-
-<style>
-.small_text {
-  font-size: 0.95rem;
-}
-.shadowed {
-  box-shadow: 3px 3px 5px grey;
-}
-
-.iconed {
-  font-size: 7.5rem;
-}
-</style>
 
 # Repo: github.com/nstrayer/jsforshiny_r2d3
 
